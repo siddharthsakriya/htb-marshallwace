@@ -1,15 +1,17 @@
 from kafka import KafkaProducer
 import time
 import yfinance as yf
-
+import os
 import json
+
+KAFKA_BROKER = os.environ['KAFKA_BROKER_SERVER']
 
 class Data_source():
     def __init__(self, instrument_name='NVDA',topic_name='NVIDIA',config = "/Users/souparna/htb-marshallwace/oanda.cfg"):
         self.latency = 0.01
         self.config = config
         self.kafka_topic = topic_name
-        self.bootstrap_servers = ['kafka:9093']
+        self.bootstrap_servers = [KAFKA_BROKER]
         self.producer = KafkaProducer(bootstrap_servers=self.bootstrap_servers,api_version=(0,11,5),value_serializer=lambda x: json.dumps(x).encode('utf-8'))
         self.ticker_symbol = instrument_name
         self.tickerData = yf.Ticker(self.ticker_symbol)

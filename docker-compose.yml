@@ -55,6 +55,8 @@ services:
     container_name: kafka-runner
     build: kafka-server
     command: sh -c "python3 kafka_producer.py"
+    environment:
+      - KAFKA_BROKER_SERVER=kafka:9092
     networks:
       - pipeline-network
   
