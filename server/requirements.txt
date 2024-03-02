@@ -1,4 +1,4 @@
 Django==4.2.10
-djangorestframework
-celery[redis]
-
+djangorestframework===3.14.0
+celery[redis]===5.3.6
+tpqoa===0.0.56
