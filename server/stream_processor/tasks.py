@@ -1,7 +1,4 @@
-# stream_processor/tasks.py
-
-from celery import shared_task
-
+# Description: This file contains the tasks for the stream processor.
 """
 EXAMPLE FOR DEVS:
 
@@ -19,7 +16,8 @@ def add(x, y):
 
 """
 
-@shared_task
+
+# ===== KAFKA STREAM PROCESSOR TASKS =====
 def data_source_task(data):
     """
     Data source task:
@@ -29,7 +27,8 @@ def data_source_task(data):
     """
     return data_process_task(data)
 
-@shared_task
+
+# ===== FLINK STREAM PROCESSOR TASKS =====
 def data_process_task(data):
     """
     Data processing task:
@@ -39,7 +38,7 @@ def data_process_task(data):
     """
     return state_management_task(data)
 
-@shared_task
+
 def state_management_task(data):
     """
     State management task:
@@ -49,7 +48,7 @@ def state_management_task(data):
     """
     return data_windowing_task(data)
 
-@shared_task
+
 def data_windowing_task(data):
     """
     Data windowing task:
@@ -59,7 +58,8 @@ def data_windowing_task(data):
     """
     return data_sink_task(data)
 
-@shared_task
+
+
 def data_sink_task(data):
     """
     Data sink task:
