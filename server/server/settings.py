@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     # third-party apps
     'rest_framework',
     # custom apps
-    'app'
+    'stream_processor',
 ]
 
 MIDDLEWARE = [

@@ -1,31 +1,15 @@
 # Description: This file contains the tasks for the stream processor.
-"""
-EXAMPLE FOR DEVS:
-
-@periodic_task(run_every=timedelta(seconds=10))
-def foo():
-    print('Hello, world!')
-
-# This will print 'Hello, world!' every 10 seconds.
-
-@shared_task
-def add(x, y):
-    return x + y
-
-# This will return the sum of x and y.
-
-"""
-
+from Kafka import Data_source
 
 # ===== KAFKA STREAM PROCESSOR TASKS =====
-def data_source_task(data):
+def data_source_task():
     """
     Data source task:
 
     This task takes data from the data source and ingests it into the system. 
     Currently we are using Apache Kafka.
     """
-    return data_process_task(data)
+    return data_process_task()
 
 
 # ===== FLINK STREAM PROCESSOR TASKS =====
