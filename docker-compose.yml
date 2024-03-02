@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+
+  backend:
+    container_name: backend
+    build: server
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+
+  client:
+    container_name: client
+    build: webapp
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend

@@ -1,0 +1,1 @@
+docker exec -it backend python manage.py createsuperuser
