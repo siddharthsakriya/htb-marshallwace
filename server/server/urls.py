@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from app.views import CreateUserView, echo_view
+from app.views import echo_view
 
 urlpatterns = [
     # Admin site

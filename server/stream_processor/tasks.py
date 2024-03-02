@@ -20,9 +20,9 @@ def add(x, y):
 """
 
 @shared_task
-def data_ingestion_task(data):
+def data_source_task(data):
     """
-    Data ingestion task:
+    Data source task:
 
     This task takes data from the data source and ingests it into the system. 
     Currently we are using Apache Kafka.
@@ -57,12 +57,12 @@ def data_windowing_task(data):
     This task takes data from the data source and windows it and performs time series analysis.
     Currently this is done using numpy and pandas.
     """
-    return data_output_task(data)
+    return data_sink_task(data)
 
 @shared_task
-def data_output_task(data):
+def data_sink_task(data):
     """
-    Data output task:
+    Data sink task:
 
     This task takes data from the data source and outputs it to the data sink.
     Currently we are sending data to a webapp (maybe a database with data lake architecture in the future?)
