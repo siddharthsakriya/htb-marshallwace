@@ -1,0 +1,160 @@
+/* ---- RESET/BASIC STYLING ---- */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+  
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  *::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .board {
+    width: 100vh;
+    height: 50vh;
+    overflow: scroll;
+    display: flex; /* Aligns children (lanes) in a row */
+    gap: 20px; /* Optional: adds some space between lanes */
+    padding: 20px; /* Optional: adds some padding around the board */
+    overflow-x: auto; 
+    background-position: center;
+    background-size: cover;
+  }
+  
+  /* ---- FORM ---- */
+  #todo-form {
+    padding: px 32px 0;
+  }
+  
+  #todo-form input {
+    padding: 12px;
+    margin-right: 12px;
+    width: 225px;
+  
+    border-radius: 4px;
+    border: none;
+  
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
+    background: white;
+  
+    font-size: 14px;
+    outline: none;
+  }
+  
+  #todo-form button {
+    padding: 12px 32px;
+  
+    border-radius: 4px;
+    border: none;
+  
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
+    background: #ffffff;
+    color: black;
+  
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .lane {
+    flex: 0 0 35%; /* Allows lanes to stay their natural width without stretching */
+    display: flex; /* If you want tasks within lanes to also be horizontally aligned, though typically they are vertical */
+    flex-direction: column; /* Aligns tasks vertically within each lane */
+    min-width: 200px; /* Optional: ensures each lane has a minimum width */
+    background-color: #f0f0f0; /* Example background color for visibility */
+    padding: 10px; /* Optional: adds some padding inside each lane */
+    border-radius: 8px; /* Optional: adds rounded corners for aesthetics */
+}
+
+  
+  /* ---- BOARD ---- */
+  .lanes {
+    display: flex;
+    align-items: flex-start;
+    justify-content: start;
+    gap: 16px;
+  
+    padding: 24px 32px;
+  
+    overflow: scroll;
+    height: 100%;
+  }
+  
+  .heading {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .swim-lane {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  
+    background: #f4f4f4;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
+  
+    padding: 12px;
+    border-radius: 4px;
+    width: 225px;
+    min-height: 120px;
+  
+    flex-shrink: 0;
+  }
+  
+  .task {
+    transition: all 0.3s ease;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    background: white;
+    color: black;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+    margin: 5px 0; /* Adds some space between tasks */
+    padding: 10px; /* Adds some padding inside each task */
+    background-color: white; /* Background color for tasks */
+    border: 1px solid #ddd; /* Optional: adds a border around each task */
+    border-radius: 4px; /* Optional: adds rounded corners to tasks */
+    font-size: 16px;
+    cursor: move;     
+
+  }
+
+  .task .task-text {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+    /* Transition for a smooth expand/collapse effect */
+  }
+
+  .task:hover .task-text {
+    max-height: 100px; /* Adjust as needed */
+    /* This should be enough to show the full description, adjust based on your content */
+  }
+  
+  .is-dragging {
+    scale: 1.05;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
+    background: rgb(50, 50, 50);
+    color: white;
+  }
+
+  .p {
+    padding: 12px;
+    margin-right: 12px;
+    width: 225px;
+  
+    border-radius: 4px;
+    border: none;
+  
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
+    background: black;
+  
+    font-size: 14px;
+    outline: none;
+    color: black;
+  }
