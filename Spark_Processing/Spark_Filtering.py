@@ -20,7 +20,7 @@ df = spark \
 
 
 # Correctly cast the value from Kafka as a Float
-deserialized_df = df.selectExpr("CAST(value AS STRING) as value").selectExpr("CAST(value AS FLOAT) as floatValue")
+deserialized_df = df.selectExpr("CAST(value AS STRING) as value").selectExpr("CAST(value AS FLOAT) as floatValue") # this is the main data frame that we want to process
 
 # Simplify the output to show just the value column
 query = deserialized_df \
