@@ -10,6 +10,8 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+RUN npm i react-scripts
+
 # Copy the entire application code to the container
 COPY . .
 

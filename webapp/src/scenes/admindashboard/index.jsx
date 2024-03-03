@@ -13,8 +13,8 @@ import BarChart from "../../components/BarChart";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
 import React, { useState } from 'react';
-import KanbanBoard from '/Users/siddharthsakriya/Desktop/htb/htb-marshallwace/webapp/src/scenes/kanban/kanban.jsx'; // Adjust the import path according to your file structure
-import '/Users/siddharthsakriya/Desktop/htb/htb-marshallwace/webapp/src/scenes/kanban/styles.css';
+import KanbanBoard from '../kanban/kanban'; // Adjust the import path according to your file structure
+import '../kanban/styles.css';
 
 
 const Admindashboard = () => {
