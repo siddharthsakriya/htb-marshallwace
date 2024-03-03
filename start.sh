@@ -1,19 +1,43 @@
-version: '3'
-services:
-  ticker_1:
-    build: kafka-server
-    container_name: ticker_1
-    environment:
-      - KAFKA_BROKER_SERVER=kafka:9092
-      - TICKER=NVDA
-      
-  ticker_2:
-    build: kafka-server
-    container_name: ticker_2
-    environment:
-      - KAFKA_BROKER_SERVER=kafka:9092
-      - TICKER=AAPL
+#!/bin/bash
 
+# Start of the docker-compose.yml file
+echo "version: '3'
+services:" > docker-compose.yml
+
+# Configuration file containing your JSON
+CONFIG_FILE="kafka-server/scalability.conf"
+
+# Counter for service names
+COUNTER=1
+
+# install jq using apt get on linux or brew on mac (silent install)
+if [ "$(uname)" == "Darwin" ]; then
+    brew install jq > /dev/null
+else
+    sudo apt-get install jq -y > /dev/null
+fi
+
+
+# Read tickers array from the config file using jq
+TICKERS=$(jq -r '.tickers[]' "$CONFIG_FILE")
+
+for line in $TICKERS
+do
+    # Append a service entry for each ticker
+    echo "  ticker_$COUNTER:
+    build: kafka-server
+    container_name: ticker_$COUNTER
+    networks:
+      - pipeline-network
+    command: sh -c \"python3 kafka_launcher.py\"
+    environment:
+      - KAFKA_BROKER_SERVER=kafka:9092
+      - TICKER=$line" >> docker-compose.yml
+    ((COUNTER++))
+done
+
+# add the rest of the docker-compose.yml file
+echo '''
 # ==== Kafka Services ====
   zookeeper:
     restart: always
@@ -63,6 +87,13 @@ services:
     depends_on:
       - kafka
 
+  kafka-runner:
+    container_name: kafka-runner
+    build: kafka-server
+    command: sh -c "python3 kafka_producer.py"
+    networks:
+      - pipeline-network
+
   # ==== Backend Services ====
   backend:
     container_name: back-end
@@ -89,4 +120,8 @@ volumes:
   zookeeper-volume:
 
 networks:
-  pipeline-network: {}
+  pipeline-network: {}''' >> docker-compose.yml
+
+echo "Generated docker-compose.yml with $((COUNTER - 1)) tickers."
+
+# sudo docker-compose up --build

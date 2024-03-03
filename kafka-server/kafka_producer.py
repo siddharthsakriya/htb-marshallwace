@@ -3,7 +3,7 @@ import time
 import os
 import json
 
-KAFKA_BROKER = os.environ['KAFKA_BROKER_SERVER']
+KAFKA_BROKER_SERVER = os.environ['KAFKA_BROKER_SERVER']
 
 class Data_source():
     """
@@ -16,7 +16,7 @@ class Data_source():
 
         self.latency = 0.01
         self.kafka_topic = topic_name
-        self.bootstrap_servers = [KAFKA_BROKER]
+        self.bootstrap_servers = [KAFKA_BROKER_SERVER]
         self.producer = KafkaProducer(bootstrap_servers=self.bootstrap_servers,api_version=(0,11,5),value_serializer=lambda x: json.dumps(x).encode('utf-8'))
 
     def start_stream_data(self, value):
@@ -34,6 +34,7 @@ class Data_source():
             time.sleep(self.latency)
 
         except Exception as e:
+            print(e)
             print("Error in sending data to Kafka, retying...")
             time.sleep(self.latency)
             self.start_stream_data(value) # sus nested functon call

@@ -1,6 +1,6 @@
 import yfinance as yf
 
-class Datat_fetcher():
+class Data_fetcher():
     def __init__(self, instrument='NVDA'):
         """
         This fetches the latest price for an instrument
@@ -26,5 +26,5 @@ class Datat_fetcher():
             print("Error fetching Data")
 
 if __name__ == "__main__":
-    data = Datat_fetcher()
+    data = Data_fetcher()
     data.stream_data()
