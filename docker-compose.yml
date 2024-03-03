@@ -49,6 +49,18 @@ services:
       - pipeline-network
     depends_on:
       - kafka
+
+  # ==== Spark Services ===
+
+  spark-runner:
+    container_name: spark-runner
+    build: Spark_Processing
+    # command: sh -c "spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 new_spark.py"
+    command: sh -c "spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 Spark_Filtering.py"
+    environment:
+      - KAFKA_BROKER_SERVER=kafka:9092
+    networks:
+      - pipeline-network
   
   # ==== ticker Services ====
 
