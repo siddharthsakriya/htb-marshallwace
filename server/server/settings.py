@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -82,12 +83,17 @@ WSGI_APPLICATION = 'server.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
+DB_IP = os.environ.get('DB_IP')
+DB_PORT = os.environ.get('DB_PORT')
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'CLUB_PYTHON_DB',
-    }
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'pipeline_pundits_db',
+       'USER': 'admin',
+       'PASSWORD': 'r00t',
+       'HOST': DB_IP,
+       'PORT': DB_PORT,
+   }
 }
 
 

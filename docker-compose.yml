@@ -91,6 +91,16 @@ services:
       - "8080:80"
     depends_on:
       - backend
+    environment:
+      - DB_IP=db
+      - DB_PORT=5432
+    networks:
+      - pipeline-network
+
+  # ==== Database Services ====
+  db:
+    container_name: db
+    build: DB
     networks:
       - pipeline-network
 
