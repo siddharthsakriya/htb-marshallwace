@@ -1,5 +1,6 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
+from kafka_producer import data_source
 import os
 
 spark = SparkSession.builder \

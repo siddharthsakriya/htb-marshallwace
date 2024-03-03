@@ -61,6 +61,15 @@ services:
       - KAFKA_BROKER_SERVER=kafka:9092
     networks:
       - pipeline-network
+
+  sink:
+    build: spark-runner
+    container_name: sink
+    networks:
+      - pipeline-network
+    command: sh -c "python3 spark-processor.py"
+    environment:
+      - KAFKA_BROKER_SERVER=kafka:9092
   
   # ==== ticker Services ====
 

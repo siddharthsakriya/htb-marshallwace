@@ -2,8 +2,11 @@ from pyspark.sql import SparkSession
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import from_json, col
 from pyspark.sql.types import StructType, StructField, StringType
+from kafka_producer import Data_source
 
 import os
+import time
+
 
 class SparkProcessor:
     def __init__(self,topic_name="stock_data"):
@@ -14,17 +17,18 @@ class SparkProcessor:
         self.TOPIC_NAME = topic_name
         self.KAFKA_BROKER_SERVER = os.environ['KAFKA_BROKER_SERVER']
 
+
     def data_processing(self, data, type):
         """
         Data processing pipeline
         @param
         data: data (Json) to process 
         """
-        if type == "self_compile":
-            data = data.map(labda x: x+1)
-        
-        elif type =="": 
-            pass
+        # if type == "self_compile":
+        #     data = data.map(labda x: x+1)
+        #
+        # elif type =="":
+        #     pass
         
         
         return self.state_management(data)
@@ -55,12 +59,12 @@ class SparkProcessor:
         data: data (Json) to process
         """
         
-        type_info=Types.ROW([Types.INT(), Types.STRING()]).build()
-        kafka_producer = FlinkKafkaProducer(
-        topic='test_sink_topic',
-        serialization_schema=serialization_schema, # 
-        producer_config={'bootstrap.servers': 'localhost:9093', 'group.id': 'test_group'})
-        ds.add_sink(kafka_producer)
+        # type_info=Types.ROW([Types.INT(), Types.STRING()]).build()
+        # kafka_producer = FlinkKafkaProducer(
+        # topic='test_sink_topic',
+        # serialization_schema=serialization_schema, #
+        # producer_config={'bootstrap.servers': 'localhost:9093', 'group.id': 'test_group'})
+        # ds.add_sink(kafka_producer)
 
         return data
     
@@ -92,6 +96,14 @@ class SparkProcessor:
         data = self.data_processing(parsed_df,'financial')
         return data
 
-    if __name__ == "__main__":
-        Processor = SparkProcessor()
-        Processor.process()
+    def publish(self): # This publishes to the sink
+        data_source = Data_source("sink")
+        while True:
+            data = self.process() # need to pass in a json file
+            data_source.start_stream_data(data)
+            time.sleep(1)
+
+
+if __name__ == "__main__":
+    Processor = SparkProcessor()
+    Processor.process()
