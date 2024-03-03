@@ -9,13 +9,14 @@ const Login = () => {
 
   const handleFormSubmit = (values) => {
     // get environment variable from .env file
-    const api_url = process.env.REACT_APP_API_URL;
+    const api_url = process.env.API_URL;
 
-    const endpoint = `${api_url}/api/login`;
+    const endpoint = `http://back-end/api/login`;
 
     let json = JSON.stringify(values);
     console.log('values', values);
     console.log('json', json);
+    console.log('url', api_url);
 
     fetch(endpoint, {
       method: 'POST',
@@ -25,6 +26,7 @@ const Login = () => {
       body: JSON.stringify(values),
     })
     .then(response => {
+      console.log('response', response);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -66,32 +68,33 @@ const Login = () => {
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Email"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.email}
-                name="firstName"
-                error={!!touched.email && !!errors.email}
-                helperText={touched.email && errors.email}
-                sx={{ gridColumn: "span 2" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Password"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.password}
-                name="password"
-                error={!!touched.password && !!errors.password}
-                helperText={touched.password && errors.password}
-                sx={{ gridColumn: "span 2" }}
-              />
+            <TextField
+              fullWidth
+              variant="filled"
+              type="text"
+              label="Email"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.email}
+              name="email" // Make sure this matches the key in initialValues exactly
+              error={!!touched.email && !!errors.email}
+              helperText={touched.email && errors.email}
+              sx={{ gridColumn: "span 2" }}
+            />
+            <TextField
+              fullWidth
+              variant="filled"
+              type="text"
+              label="Password"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.password}
+              name="password" // Make sure this matches the key in initialValues exactly
+              error={!!touched.password && !!errors.password} // Added error handling for the password field
+              helperText={touched.password && errors.password} // Added helperText for the password field
+              sx={{ gridColumn: "span 2" }}
+            />
+
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
