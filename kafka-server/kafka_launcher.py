@@ -10,7 +10,7 @@ data_source = Data_source("stock_data")
 
 while True:
     
-    data_source.start_stream_data(Data_fetcher(ticker).stream_data())
+    data_source.start_stream_data(Data_fetcher(ticker).stream_data(), ticker)
     time.sleep(1)
 
 

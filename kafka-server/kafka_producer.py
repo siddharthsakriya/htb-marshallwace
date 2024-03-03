@@ -19,13 +19,19 @@ class Data_source():
         self.bootstrap_servers = [KAFKA_BROKER_SERVER]
         self.producer = KafkaProducer(bootstrap_servers=self.bootstrap_servers,api_version=(0,11,5),value_serializer=lambda x: json.dumps(x).encode('utf-8'))
 
-    def start_stream_data(self, value):
+    def start_stream_data(self, value, stock_symbol):
         """Streams data to Kafka
         @param
         value: value to publish to the topic """
         try:
             if (value): # as long as value is not empty publishb
-                self.producer.send(self.kafka_topic, value=value)
+                dic = {
+                    "stock_symbol": stock_symbol,
+                    "price": value,
+                    "time_stamp": time.time()
+                }
+                json_data = json.dumps(dic)
+                self.producer.send(self.kafka_topic, value=json_data)
                 self.producer.flush()
                 print(f"Sent data to topic {self.kafka_topic}: {value}")
             else:
