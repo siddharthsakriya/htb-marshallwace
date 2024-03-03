@@ -38,9 +38,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # third-party apps
     'rest_framework',
+    'rest_framework.authtoken',
     # custom apps
-    'stream_processor',
+    'webapp',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

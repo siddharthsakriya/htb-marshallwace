@@ -17,14 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from stream_processor.views import echo_view
 
 urlpatterns = [
     # Admin site
     path('admin/', admin.site.urls),
 
-    # Echo endpoint (for testing connections)
-    path('echo/', echo_view, name='echo'),
-
     # ===== API endpoints =====
+    path('api/', include('webapp.urls')),
 ]
