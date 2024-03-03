@@ -1,0 +1,8 @@
+schema.version: "1.0"
+kafka.to.websocket:
+  - kafka.consumer.config:
+      metadata.broker.list: kafka:9092
+      group.id: k2ws-group
+    kafka.topics:
+      - test
+    address: :80
