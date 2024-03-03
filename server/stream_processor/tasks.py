@@ -1,5 +1,4 @@
 # Description: This file contains the tasks for the stream processor.
-from Kafka import Data_source
 
 # ===== KAFKA STREAM PROCESSOR TASKS =====
 def data_source_task():

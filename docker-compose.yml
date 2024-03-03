@@ -52,6 +52,7 @@ services:
       - kafka
 
   kafka-runner:
+    scale
     container_name: kafka-runner
     build: kafka-server
     command: sh -c "python3 kafka_producer.py"
