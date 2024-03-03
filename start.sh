@@ -17,27 +17,7 @@ else
     sudo apt-get install jq -y > /dev/null
 fi
 
-
-# Read tickers array from the config file using jq
-TICKERS=$(jq -r '.tickers[]' "$CONFIG_FILE")
-
-for line in $TICKERS
-do
-    # Append a service entry for each ticker
-    echo "  ticker_$COUNTER:
-    build: kafka-server
-    container_name: ticker_$COUNTER
-    networks:
-      - pipeline-network
-    command: sh -c \"python3 kafka_launcher.py\"
-    environment:
-      - KAFKA_BROKER_SERVER=kafka:9092
-      - TICKER=$line" >> docker-compose.yml
-    ((COUNTER++))
-done
-
-# add the rest of the docker-compose.yml file
-echo '''
+echo """
 # ==== Kafka Services ====
   zookeeper:
     restart: always
@@ -86,13 +66,32 @@ echo '''
       - pipeline-network
     depends_on:
       - kafka
+  
+  # ==== ticker Services ====
+""" >> docker-compose.yml
 
-  kafka-runner:
-    container_name: kafka-runner
+
+# Read tickers array from the config file using jq
+TICKERS=$(jq -r '.tickers[]' "$CONFIG_FILE")
+
+for line in $TICKERS
+do
+    # Append a service entry for each ticker
+    echo "  ticker_$COUNTER:
     build: kafka-server
-    command: sh -c "python3 kafka_producer.py"
+    container_name: ticker_$COUNTER
     networks:
       - pipeline-network
+    command: sh -c \"python3 kafka_launcher.py\"
+    environment:
+      - KAFKA_BROKER_SERVER=kafka:9092
+      - TICKER=$line" >> docker-compose.yml
+    ((COUNTER++))
+done
+
+# add the rest of the docker-compose.yml file
+echo '''
+
 
   # ==== Backend Services ====
   backend:
@@ -124,4 +123,4 @@ networks:
 
 echo "Generated docker-compose.yml with $((COUNTER - 1)) tickers."
 
-# sudo docker-compose up --build
+sudo docker-compose up --build
