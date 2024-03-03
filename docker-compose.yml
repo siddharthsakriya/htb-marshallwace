@@ -116,6 +116,17 @@ services:
     depends_on:
       - db
 
+  flask:
+    container_name: flask
+    build: flaskwebapp
+    ports:
+      - "5000:5000"
+    
+    networks:
+      - pipeline-network
+    environment:
+      - KAFKA_BROKER_SERVER=kafka:9092
+
   # ==== Frontend Services ====
   client:
     container_name: webapp
