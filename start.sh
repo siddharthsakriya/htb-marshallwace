@@ -82,7 +82,7 @@ do
     container_name: ticker_$COUNTER
     networks:
       - pipeline-network
-    command: sh -c \"python3 kafka_launcher.py\"
+    command: sh -c \"python3 kafka_source_fin.py\"
     environment:
       - KAFKA_BROKER_SERVER=kafka:9092
       - TICKER=$line" >> docker-compose.yml

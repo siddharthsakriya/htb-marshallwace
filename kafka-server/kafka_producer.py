@@ -18,7 +18,7 @@ class Data_source():
         self.bootstrap_servers = [KAFKA_BROKER_SERVER]
         self.producer = KafkaProducer(bootstrap_servers=self.bootstrap_servers,api_version=(0,11,5),value_serializer=lambda x: x.encode('utf-8'))
 
-    def start_stream_data(self, value, stock_symbol):
+    def start_stream_data(self, value):
         """Streams data to Kafka
         @param
         value: value to publish to the topic """

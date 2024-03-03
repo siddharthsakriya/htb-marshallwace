@@ -78,7 +78,7 @@ services:
     container_name: ticker_1
     networks:
       - pipeline-network
-    command: sh -c "python3 kafka_launcher.py"
+    command: sh -c "python3 kafka_source_fin.py"
     environment:
       - KAFKA_BROKER_SERVER=kafka:9092
       - TICKER=NVDA
@@ -87,7 +87,7 @@ services:
     container_name: ticker_2
     networks:
       - pipeline-network
-    command: sh -c "python3 kafka_launcher.py"
+    command: sh -c "python3 kafka_source_fin.py"
     environment:
       - KAFKA_BROKER_SERVER=kafka:9092
       - TICKER=AAPL

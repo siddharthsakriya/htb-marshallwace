@@ -1,34 +1,42 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col
-from kafka_producer import data_source
+from pyspark.sql.functions import col, from_json, window, avg
+from pyspark.sql.types import StructType, StructField, FloatType
 import os
 
 spark = SparkSession.builder \
-    .appName("KafkaSparkStreaming") \
+    .appName("KafkaSparkStreamingMovingAverage") \
     .getOrCreate()
 
-# We will keep the consumer running for 10 seconds
+# Assuming your Kafka setup and topic name are correctly configured
 KAFKA_BROKER_SERVER = os.environ['KAFKA_BROKER_SERVER']
 TOPIC_NAME = "stock_data"
 
-# Subscribe to 1 topic
+# Define the schema of the Kafka data (if it's just a float value, adjust as necessary)
+schema = StructType([StructField("value", FloatType())])
+
+# Subscribe to the topic
 df = spark \
-  .readStream \
-  .format("kafka") \
-  .option("kafka.bootstrap.servers", KAFKA_BROKER_SERVER) \
-  .option("subscribe", TOPIC_NAME) \
-  .load()
+    .readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", KAFKA_BROKER_SERVER) \
+    .option("subscribe", TOPIC_NAME) \
+    .load()
 
+# Deserialize the data assuming it's JSON, adjust according to your actual data format
+deserialized_df = df.select(from_json(col("value").cast("string"), schema).alias("data")).select("data.*")
 
-# Correctly cast the value from Kafka as a Float
-deserialized_df = df.selectExpr("CAST(value AS STRING) as value").selectExpr("CAST(value AS FLOAT) as floatValue")
+# Calculate moving average over a specified window
+# Adjust the window duration and slide duration as needed
+movingAvg = deserialized_df \
+    .groupBy(window(col("timestamp"), "1 minute", "30 seconds")) \
+    .agg(avg("value").alias("movingAverage"))
 
-# Simplify the output to show just the value column
-query = deserialized_df \
+# Convert to a Python dictionary and print. Note: This is a simplification for illustration.
+# In practice, you might need to adjust this to properly serialize and output your data.
+query = movingAvg \
     .writeStream \
-    .outputMode("append") \
-    .format("console") \
-    .option("truncate", False) \
+    .outputMode("update") \
+    .foreachBatch(lambda df, epoch_id: df.collect().foreach(print)) \
     .start()
 
 query.awaitTermination()

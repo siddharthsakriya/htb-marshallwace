@@ -15,4 +15,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the current directory contents into the container at /code
 COPY . .
 
-CMD ["python", "kafka_launcher.py"]
+CMD ["python", "kafka_source_fin.py"]
