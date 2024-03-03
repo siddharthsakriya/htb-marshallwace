@@ -117,6 +117,8 @@ services:
       - backend
     networks:
       - pipeline-network
+    environment:
+      - API_URL=http://back-end:8000
 
 volumes:
   kafka-volume:

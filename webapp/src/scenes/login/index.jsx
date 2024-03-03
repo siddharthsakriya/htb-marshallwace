@@ -8,7 +8,14 @@ const Login = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const handleFormSubmit = (values) => {
-    const endpoint = 'https://example.com/api/login'; // Replace with your actual endpoint
+    // get environment variable from .env file
+    const api_url = process.env.REACT_APP_API_URL;
+
+    const endpoint = `${api_url}/api/login`;
+
+    let json = JSON.stringify(values);
+    console.log('values', values);
+    console.log('json', json);
 
     fetch(endpoint, {
       method: 'POST',
