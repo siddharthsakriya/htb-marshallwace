@@ -22,8 +22,14 @@ const KanbanBoard = () => {
     
 
     const [tasks, setTasks] = useState({
-        Client: [{ id: 1, name: 'hello', text: 'Get groceries' }, { id: 2, name: 'hello', text: 'Feed the dogs' }, { id: 3, name: 'hello', text: 'Mow the lawn' }],
-        Trader: [{ id: 5, name: 'hello', text: 'Watch video of a man raising a grocery store lobster as a pet' }],
+        Ingestion: [
+            { id: 1, name: 'Data Collection', text: 'Gather financial data from APIs' },
+            { id: 2, name: 'Data Import', text: 'Import historical stock prices' }
+        ],
+        Processing: [
+            { id: 3, name: 'Data Cleansing', text: 'Normalize and clean financial datasets' },
+            { id: 4, name: 'Data Transformation', text: 'Apply transformations for analysis readiness' }
+        ],
     });
     const [draggedItem, setDraggedItem] = useState(null);
 
