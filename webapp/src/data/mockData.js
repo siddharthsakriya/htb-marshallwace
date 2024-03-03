@@ -1,25 +1,7 @@
 //TODO: make an api request to get the data when ismaeel is back
 import { tokens } from "../theme";
 
-
-async function fetchData(option) {
-  // try {
-  //   const response = await fetch('https://api.example.com/data' + option);
-  //   if (!response.ok) {
-  //     throw new Error('Network response was not ok');
-  //   }
-  //   const data = await response.json(); // assuming the API returns JSON data
-  //   return data; // return the data for use in your component
-  // } catch (error) {
-  //   console.error('Failed to fetch data:', error);
-  //   throw error; // re-throw the error if you want to handle it in your component
-  // }
-
-  return mockLineData;
-}
-
-// export { fetchData };
-
+const {getRecentStockValues, startConsumer} = require('stream_stocks/Consumer.js');
 
 
 export const mockDataTeam = [
@@ -613,6 +595,36 @@ export const mockLineData = [
     ],
   },
 ];
+
+function logRecentStockValues() {
+  const recentValues = getRecentStockValues();
+  return recentValues.map(value => ({
+    // Assuming each value has `x` and `y` properties, map them accordingly
+    // Modify this mapping based on the actual structure of the data returned by getRecentStockValues()
+    x: value.x, // or any other property that represents the x-axis value
+    y: value.y, // or any other property that represents the y-axis value
+  }));
+}
+
+// Update mockLineData every 1000ms (1 second) with new stock values
+setInterval(() => {
+const newLineData = logRecentStockValues();
+
+// Assuming you want to replace the data for a specific line, e.g., the first one
+if (mockLineData.length > 0) {
+  mockLineData[0].data = newLineData;
+} else {
+  // If mockLineData is empty, initialize it with a new line data structure
+  mockLineData = [{
+    id: "newData", // Assign a relevant ID
+    color: tokens("dark").greenAccent[500], // Assign a color
+    data: newLineData, // Assign the new data
+  }];
+}
+
+// Optional: Log the updated mockLineData to verify the update (can be removed in production)
+console.log(mockLineData);
+}, 1000);
 
 export const mockGeographyData = [
   {

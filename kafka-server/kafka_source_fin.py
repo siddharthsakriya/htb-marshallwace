@@ -12,8 +12,7 @@ data_source = Data_source("stock_data")
 while True:
     dic = {
         "stock_symbol": ticker,
-        "price": Data_fetcher(ticker).stream_data(),
-        "time_stamp": time.time()
+        "price": Data_fetcher(ticker).stream_data()
     }
     json_data = json.dumps(dic) # publishes timed json data
     data_source.start_stream_data(json_data)

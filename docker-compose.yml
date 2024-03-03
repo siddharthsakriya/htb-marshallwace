@@ -61,15 +61,8 @@ services:
       - KAFKA_BROKER_SERVER=kafka:9092
     networks:
       - pipeline-network
-
-  sink:
-    build: spark-runner
-    container_name: sink
-    networks:
-      - pipeline-network
-    command: sh -c "python3 spark-processor.py"
-    environment:
-      - KAFKA_BROKER_SERVER=kafka:9092
+    depends_on:
+      - kafka
   
   # ==== ticker Services ====
 
@@ -82,6 +75,7 @@ services:
     environment:
       - KAFKA_BROKER_SERVER=kafka:9092
       - TICKER=NVDA
+    
   ticker_2:
     build: kafka-server
     container_name: ticker_2
@@ -92,53 +86,24 @@ services:
       - KAFKA_BROKER_SERVER=kafka:9092
       - TICKER=AAPL
 
-  # ==== Database Services ====
-  db:
-    container_name: db
-    build: DB
-    ports:
-      - "5432:5432"
-    networks:
-      - pipeline-network
-
-  # ==== Backend Services ====
-  backend:
-    container_name: back-end
-    build: server
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    ports:
-      - "8000:8000"
-    environment:
-      - DB_IP=db
-      - DB_PORT=5432
-    networks:
-      - pipeline-network
-    depends_on:
-      - db
-
-  flask:
-    container_name: flask
-    build: flaskwebapp
-    ports:
-      - "5000:5000"
-    
-    networks:
-      - pipeline-network
-    environment:
-      - KAFKA_BROKER_SERVER=kafka:9092
-
   # ==== Frontend Services ====
   client:
     container_name: webapp
     build: webapp
     ports:
       - "8080:80"
-    depends_on:
-      - backend
     networks:
       - pipeline-network
     environment:
       - API_URL=http://back-end:8000
+
+  test:
+    container_name: test
+    build: stream_stocks
+    networks:
+      - pipeline-network
+    depends_on:
+      - kafka
 
 volumes:
   kafka-volume:

@@ -18,14 +18,17 @@ else
 fi
 
 echo """
+version: '3'
+services:
+
 # ==== Kafka Services ====
   zookeeper:
     restart: always
     image: docker.io/bitnami/zookeeper:3.8
     ports:
-      - "2181:2181"
+      - 2181:2181
     volumes:
-      - "zookeeper-volume:/bitnami"
+      - zookeeper-volume:/bitnami
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
     networks:
@@ -36,9 +39,9 @@ echo """
     restart: always
     image: docker.io/bitnami/kafka:3.3
     ports:
-      - "9093:9093"
+      - 9093:9093
     volumes:
-      - "kafka-volume:/bitnami"
+      - kafka-volume:/bitnami
     environment:
       - KAFKA_BROKER_ID=1
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
@@ -57,11 +60,25 @@ echo """
     restart: always
     image: provectuslabs/kafka-ui:latest
     ports:
-      - "8083:8080"
+      - 8083:8080
     environment:
       - DYNAMIC_CONFIG_ENABLED=true
       - KAFKA_CLUSTERS_0_NAME=pipeline_pundits
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+    networks:
+      - pipeline-network
+    depends_on:
+      - kafka
+
+  # ==== Spark Services ===
+
+  spark-runner:
+    container_name: spark-runner
+    build: Spark_Processing
+    # command: sh -c "spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 new_spark.py"
+    command: sh -c "spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 Spark_Filtering.py"
+    environment:
+      - KAFKA_BROKER_SERVER=kafka:9092
     networks:
       - pipeline-network
     depends_on:
@@ -93,33 +110,32 @@ done
 echo '''
 
 
-  # ==== Backend Services ====
-  backend:
-    container_name: back-end
-    build: server
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    ports:
-      - "8000:8000"
-    networks:
-      - pipeline-network
-
-  # ==== Frontend Services ====
+# ==== Frontend Services ====
   client:
     container_name: webapp
     build: webapp
     ports:
       - "8080:80"
-    depends_on:
-      - backend
     networks:
       - pipeline-network
+    environment:
+      - API_URL=http://back-end:8000
+
+  test:
+    container_name: test
+    build: stream_stocks
+    networks:
+      - pipeline-network
+    depends_on:
+      - kafka
 
 volumes:
   kafka-volume:
   zookeeper-volume:
 
 networks:
-  pipeline-network: {}''' >> docker-compose.yml
+  pipeline-network: {}
+''' >> docker-compose.yml
 
 echo "Generated docker-compose.yml with $((COUNTER - 1)) tickers."
 

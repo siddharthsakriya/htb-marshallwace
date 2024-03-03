@@ -19,7 +19,7 @@ class Data_fetcher():
             if not (tickerDf.empty):
                 latest_price = tickerDf['Close'].iloc[-1] # this is the fetched price
                 print(f"latest_price for {self.ticker_symbol} is {latest_price}")
-                return latest_price
+                return float(latest_price)
             else:
                 print(f"Data for {self.ticker_symbol} is empty")
         except Exception as e:
